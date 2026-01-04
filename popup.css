@@ -1,0 +1,128 @@
+body {
+    width: 350px;
+    height: 500px;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #2c3e50;
+}
+
+#count {
+    margin: 4px 0 0;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.primary {
+    background-color: #3498db;
+    color: white;
+}
+
+.primary:hover {
+    background-color: #2980b9;
+}
+
+.secondary {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.secondary:hover {
+    background-color: #27ae60;
+}
+
+.url-list-container {
+    flex: 1;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    padding: 8px;
+    border-bottom: 1px solid #f0f0f0;
+    word-break: break-all;
+    font-size: 0.85rem;
+}
+
+li:last-child {
+    border-bottom: none;
+}
+
+li a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+li a:hover {
+    text-decoration: underline;
+}
+
+.loading {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+}
+
+/* Scrollbar styling */
+.url-list-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.url-list-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.url-list-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.url-list-container::-webkit-scrollbar-thumb:hover {
+    background: #bbb;
+}

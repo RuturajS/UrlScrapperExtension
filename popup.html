@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Scraper</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>URL Scraper</h1>
+            <p id="count">0 URLs found</p>
+        </header>
+        
+        <div class="actions">
+            <button id="copyBtn" class="btn primary">Copy All</button>
+            <button id="saveBtn" class="btn secondary">Save as .txt</button>
+        </div>
+
+        <div class="url-list-container">
+            <ul id="urlList">
+                <!-- URLs will be injected here -->
+                <li class="loading">Scanning page...</li>
+            </ul>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
