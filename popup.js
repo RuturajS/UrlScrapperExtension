@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to get active tab and send message
     function scanPage() {
+        listElement.innerHTML = '<li class="loading">Deep scanning page & resources...<br>(This may take a few seconds)</li>';
+
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs.length === 0) return;
             const activeTab = tabs[0];
@@ -37,9 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Send message to content script
             chrome.tabs.sendMessage(activeTab.id, { action: "scrape_urls" }, (response) => {
                 if (chrome.runtime.lastError) {
-                    // Script might not be injected yet or we are on a restricted page (like chrome://)
-                    // We can try to inject it dynamically if missing, but manifest content_scripts handles most.
-                    // For now, let's just handle the error gracefully.
                     listElement.innerHTML = '<li class="loading">Cannot access page. Try refreshing or check if this is a system page.</li>';
                     console.error(chrome.runtime.lastError);
                 } else if (response && response.urls) {

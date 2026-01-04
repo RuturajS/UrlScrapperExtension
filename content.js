@@ -1,30 +1,72 @@
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "scrape_urls") {
-        const urls = scrapeUrls();
-        sendResponse({ urls: urls });
+        deepScrape().then(urls => {
+            sendResponse({ urls: urls });
+        });
+        return true; // Indicates we will respond asynchronously
     }
 });
 
-function scrapeUrls() {
-    // Select all anchor tags
-    const anchors = document.querySelectorAll('a[href]');
+async function deepScrape() {
     const urlSet = new Set();
+    const urlRegex = /(https?:\/\/[^\s"'<>\`\(\)]+)/g;
 
-    anchors.forEach(a => {
-        try {
-            // Clean and normalize the URL
-            const url = new URL(a.href, document.baseURI).href;
-            // Filter out empty, js, mailto, tel links if desired, but user asked for "all urls"
-            // We will filter out javascript: and mailto: as they aren't typically what "scrapers" want,
-            // but we'll include everything else to be safe.
-            if (!url.startsWith('javascript:') && !url.startsWith('mailto:')) {
-                 urlSet.add(url);
-            }
-        } catch (e) {
-            // Ignore invalid URLs
+    // Helper to add found URLs to the set
+    const addUrls = (text) => {
+        if (!text) return;
+        const matches = text.match(urlRegex);
+        if (matches) {
+            matches.forEach(url => {
+                // Basic cleanup
+                let cleanUrl = url.trim();
+                // Remove trailing punctuation often captured by regex
+                cleanUrl = cleanUrl.replace(/[.,;:]$/, '');
+                if (!cleanUrl.startsWith('javascript:') && !cleanUrl.startsWith('mailto:')) {
+                    urlSet.add(cleanUrl);
+                }
+            });
         }
+    };
+
+    // 1. Scan the current page HTML source
+    console.log("Scanning page source...");
+    addUrls(document.documentElement.innerHTML);
+
+    // 2. Scan standard anchors (absolute resolution)
+    console.log("Scanning anchor tags...");
+    document.querySelectorAll('a[href]').forEach(a => {
+        try {
+            urlSet.add(new URL(a.href, document.baseURI).href);
+        } catch (e) { }
     });
 
-    return Array.from(urlSet);
+    // 3. Find external scripts and styles
+    const scripts = Array.from(document.querySelectorAll('script[src]')).map(s => s.src);
+    const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(l => l.href);
+    const resources = [...scripts, ...styles];
+
+    // 4. Fetch and scan resources
+    // We limit concurrency to avoid overwhelming the browser/network
+    console.log(`Scanning ${resources.length} external resources...`);
+
+    // Helper for fetching text
+    const fetchResource = async (url) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) return null;
+            return await response.text();
+        } catch (err) {
+            console.warn(`Failed to fetch ${url}:`, err);
+            return null;
+        }
+    };
+
+    const fetchPromises = resources.map(url => fetchResource(url).then(text => addUrls(text)));
+
+    // Wait for all fetches (or at least try to)
+    await Promise.all(fetchPromises);
+
+    return Array.from(urlSet).sort();
 }
+
