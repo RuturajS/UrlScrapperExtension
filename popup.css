@@ -126,3 +126,21 @@ li a:hover {
 .url-list-container::-webkit-scrollbar-thumb:hover {
     background: #bbb;
 }
+
+footer {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 0.7rem;
+    color: #95a5a6;
+}
+
+footer a {
+    color: #95a5a6;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+footer a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}

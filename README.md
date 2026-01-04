@@ -41,3 +41,7 @@ Since this extension is not yet in the Chrome Web Store, you need to load it man
 -   **Manifest V3**: Using the latest Web Extensions standard.
 -   **HTML/CSS**: Clean and responsive popup interface.
 -   **JavaScript**: efficient DOM traversal and file handling.
+
+## Credits
+
+Created by [Ruturaj Sharbidre](https://github.com/RuturajS).
